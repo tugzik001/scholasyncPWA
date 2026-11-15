@@ -1,0 +1,432 @@
+{
+  "version": 1,
+  "exams": [
+    "WAEC",
+    "JAMB"
+  ],
+  "tracks": {
+    "Science": {
+      "subjects": [
+        {
+          "id": "mathematics",
+          "name": "Mathematics",
+          "notes": "assets/guides/science/mathematics.json",
+          "topics": [
+            {
+              "id": "math-01",
+              "title": "Number bases, fractions and decimals"
+            },
+            {
+              "id": "math-02",
+              "title": "Indices, logarithms and surds"
+            },
+            {
+              "id": "math-03",
+              "title": "Sets and Venn diagrams"
+            },
+            {
+              "id": "math-04",
+              "title": "Algebra: factorisation, equations and inequalities"
+            },
+            {
+              "id": "math-05",
+              "title": "Variation (direct, inverse, joint) and word problems"
+            },
+            {
+              "id": "math-06",
+              "title": "Sequences and series (AP and GP)"
+            },
+            {
+              "id": "math-07",
+              "title": "Mensuration: perimeter, area and volume"
+            },
+            {
+              "id": "math-08",
+              "title": "Geometry, bearings and circle theorems"
+            },
+            {
+              "id": "math-09",
+              "title": "Trigonometry and coordinate geometry"
+            },
+            {
+              "id": "math-10",
+              "title": "Statistics and probability"
+            }
+          ]
+        },
+        {
+          "id": "chemistry",
+          "name": "Chemistry",
+          "notes": "assets/guides/science/chemistry.json",
+          "topics": [
+            {
+              "id": "chem-01",
+              "title": "Matter, separation techniques and purification"
+            },
+            {
+              "id": "chem-02",
+              "title": "Atomic structure and the periodic table"
+            },
+            {
+              "id": "chem-03",
+              "title": "Chemical bonding and structure"
+            },
+            {
+              "id": "chem-04",
+              "title": "Mole concept and stoichiometry"
+            },
+            {
+              "id": "chem-05",
+              "title": "States of matter and the gas laws"
+            },
+            {
+              "id": "chem-06",
+              "title": "Acids, bases, salts and titration"
+            },
+            {
+              "id": "chem-07",
+              "title": "Energy changes, rates and equilibrium"
+            },
+            {
+              "id": "chem-08",
+              "title": "Electrolysis and redox reactions"
+            },
+            {
+              "id": "chem-09",
+              "title": "Metals, non-metals and their compounds"
+            },
+            {
+              "id": "chem-10",
+              "title": "Organic chemistry: hydrocarbons and functional groups"
+            }
+          ]
+        },
+        {
+          "id": "physics",
+          "name": "Physics",
+          "notes": "assets/guides/science/physics.json",
+          "topics": [
+            {
+              "id": "phy-01",
+              "title": "Measurements, units and dimensions"
+            },
+            {
+              "id": "phy-02",
+              "title": "Motion, vectors and Newton's laws"
+            },
+            {
+              "id": "phy-03",
+              "title": "Work, energy, power and simple machines"
+            },
+            {
+              "id": "phy-04",
+              "title": "Pressure and fluids"
+            },
+            {
+              "id": "phy-05",
+              "title": "Heat, temperature and gas laws"
+            },
+            {
+              "id": "phy-06",
+              "title": "Waves, sound and light"
+            },
+            {
+              "id": "phy-07",
+              "title": "Current electricity and circuits"
+            },
+            {
+              "id": "phy-08",
+              "title": "Magnetism and electromagnetic induction"
+            },
+            {
+              "id": "phy-09",
+              "title": "Atomic and nuclear physics (radioactivity)"
+            }
+          ]
+        }
+      ]
+    },
+    "Art": {
+      "subjects": [
+        {
+          "id": "english",
+          "name": "English Language",
+          "notes": "assets/guides/art/english.json",
+          "topics": [
+            {
+              "id": "eng-01",
+              "title": "Comprehension and summary writing"
+            },
+            {
+              "id": "eng-02",
+              "title": "Lexis: vocabulary, idioms, synonyms and antonyms"
+            },
+            {
+              "id": "eng-03",
+              "title": "Grammar: tenses, concord and sentence types"
+            },
+            {
+              "id": "eng-04",
+              "title": "Clauses, phrases and sentence structure"
+            },
+            {
+              "id": "eng-05",
+              "title": "Oral English: vowels, consonants, stress and intonation"
+            },
+            {
+              "id": "eng-06",
+              "title": "Essay writing: narrative, descriptive and argumentative"
+            },
+            {
+              "id": "eng-07",
+              "title": "Letter writing: formal and informal"
+            },
+            {
+              "id": "eng-08",
+              "title": "Figures of speech"
+            },
+            {
+              "id": "eng-09",
+              "title": "Cloze tests and sentence interpretation"
+            }
+          ]
+        },
+        {
+          "id": "government",
+          "name": "Government",
+          "notes": "assets/guides/art/government.json",
+          "topics": [
+            {
+              "id": "gov-01",
+              "title": "Basic concepts: power, authority, legitimacy and sovereignty"
+            },
+            {
+              "id": "gov-02",
+              "title": "Forms of government and types of constitution"
+            },
+            {
+              "id": "gov-03",
+              "title": "Arms of government and separation of powers"
+            },
+            {
+              "id": "gov-04",
+              "title": "Federalism and unitary systems"
+            },
+            {
+              "id": "gov-05",
+              "title": "Political parties, elections and pressure groups"
+            },
+            {
+              "id": "gov-06",
+              "title": "Pre-colonial political systems (Hausa-Fulani, Yoruba, Igbo)"
+            },
+            {
+              "id": "gov-07",
+              "title": "Colonial rule and constitutional development in Nigeria"
+            },
+            {
+              "id": "gov-08",
+              "title": "Public administration: civil service and local government"
+            },
+            {
+              "id": "gov-09",
+              "title": "International organisations: UN, AU, ECOWAS, OPEC, Commonwealth"
+            }
+          ]
+        },
+        {
+          "id": "literature",
+          "name": "Literature-in-English",
+          "notes": "assets/guides/art/literature.json",
+          "topics": [
+            {
+              "id": "lit-01",
+              "title": "Literary genres: prose, poetry and drama"
+            },
+            {
+              "id": "lit-02",
+              "title": "Literary terms and figures of speech"
+            },
+            {
+              "id": "lit-03",
+              "title": "Drama: plot, character, theme and stagecraft"
+            },
+            {
+              "id": "lit-04",
+              "title": "Prose: setting, narration, characterisation and themes"
+            },
+            {
+              "id": "lit-05",
+              "title": "Poetry appreciation and unseen poems"
+            },
+            {
+              "id": "lit-06",
+              "title": "Prescribed African texts (check the current WAEC/JAMB list)"
+            },
+            {
+              "id": "lit-07",
+              "title": "Prescribed non-African texts (check the current WAEC/JAMB list)"
+            },
+            {
+              "id": "lit-08",
+              "title": "Answering context and essay questions"
+            }
+          ]
+        }
+      ]
+    },
+    "Commercial": {
+      "subjects": [
+        {
+          "id": "economics",
+          "name": "Economics",
+          "notes": "assets/guides/commercial/economics.json",
+          "topics": [
+            {
+              "id": "eco-01",
+              "title": "Basic concepts: scarcity, choice and opportunity cost"
+            },
+            {
+              "id": "eco-02",
+              "title": "Demand, supply and price determination"
+            },
+            {
+              "id": "eco-03",
+              "title": "Elasticity of demand and supply"
+            },
+            {
+              "id": "eco-04",
+              "title": "Theory of production and cost"
+            },
+            {
+              "id": "eco-05",
+              "title": "Market structures (perfect competition, monopoly)"
+            },
+            {
+              "id": "eco-06",
+              "title": "National income and economic indicators"
+            },
+            {
+              "id": "eco-07",
+              "title": "Money, banking and the Central Bank"
+            },
+            {
+              "id": "eco-08",
+              "title": "Public finance and taxation"
+            },
+            {
+              "id": "eco-09",
+              "title": "Population and labour"
+            },
+            {
+              "id": "eco-10",
+              "title": "International trade and balance of payments"
+            },
+            {
+              "id": "eco-11",
+              "title": "Agriculture, industry and the Nigerian economy"
+            }
+          ]
+        },
+        {
+          "id": "accounting",
+          "name": "Financial Accounting",
+          "notes": "assets/guides/commercial/accounting.json",
+          "topics": [
+            {
+              "id": "acc-01",
+              "title": "Accounting equation and double-entry bookkeeping"
+            },
+            {
+              "id": "acc-02",
+              "title": "Journals, cash book and petty cash"
+            },
+            {
+              "id": "acc-03",
+              "title": "Ledger accounts and the trial balance"
+            },
+            {
+              "id": "acc-04",
+              "title": "Final accounts of a sole trader"
+            },
+            {
+              "id": "acc-05",
+              "title": "Adjustments: accruals, prepayments, depreciation, bad debts"
+            },
+            {
+              "id": "acc-06",
+              "title": "Bank reconciliation statements"
+            },
+            {
+              "id": "acc-07",
+              "title": "Control accounts and correction of errors"
+            },
+            {
+              "id": "acc-08",
+              "title": "Partnership accounts"
+            },
+            {
+              "id": "acc-09",
+              "title": "Company accounts: shares and debentures"
+            },
+            {
+              "id": "acc-10",
+              "title": "Manufacturing accounts"
+            },
+            {
+              "id": "acc-11",
+              "title": "Non-profit organisations: income and expenditure accounts"
+            }
+          ]
+        },
+        {
+          "id": "commerce",
+          "name": "Commerce",
+          "notes": "assets/guides/commercial/commerce.json",
+          "topics": [
+            {
+              "id": "com-01",
+              "title": "Introduction to commerce and aids to trade"
+            },
+            {
+              "id": "com-02",
+              "title": "Home trade: wholesale and retail"
+            },
+            {
+              "id": "com-03",
+              "title": "Foreign trade and trade documents"
+            },
+            {
+              "id": "com-04",
+              "title": "Business units: sole trader, partnership, companies, co-operatives"
+            },
+            {
+              "id": "com-05",
+              "title": "Banking and other financial institutions"
+            },
+            {
+              "id": "com-06",
+              "title": "Insurance and its principles"
+            },
+            {
+              "id": "com-07",
+              "title": "Transport and warehousing"
+            },
+            {
+              "id": "com-08",
+              "title": "Communication and advertising"
+            },
+            {
+              "id": "com-09",
+              "title": "Marketing and consumer protection"
+            },
+            {
+              "id": "com-10",
+              "title": "Stock exchange, money and capital markets"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

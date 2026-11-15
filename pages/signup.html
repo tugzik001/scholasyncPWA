@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Student ID — ScholaSync</title>
+  <meta name="theme-color" content="#faf9f6" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="navbar">
+      <a href="../index.html" class="brand">
+        <span class="brand-dot"></span>
+        scholasync
+      </a>
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode"></button>
+        <a href="login.html" class="btn btn-outline">Log in</a>
+      </div>
+    </header>
+
+    <main class="auth-wrapper">
+      <div class="auth-card auth-card-wide">
+        <!-- Registration Form -->
+        <div id="signup-form-container">
+          <div class="pill-badge">● One-time online signup · offline forever</div>
+          <h1>Get your <span class="serif-italic">Student ID.</span></h1>
+          <p class="auth-subtitle">
+            Register once offline to generate your personal ID for WAEC/JAMB study guides and syllabus tracking.
+          </p>
+
+          <div id="signup-error" class="error-msg"></div>
+
+          <form id="signup-form">
+  <div class="form-group">
+    <label for="fullName">Student Full Name</label>
+    <input type="text" id="fullName" placeholder="e.g., Chinedu Okafor" required />
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" min="10" max="25" placeholder="e.g., 16" required />
+    </div>
+    <div class="form-group">
+      <label for="schoolAbbr">School Abbr.</label>
+      <input type="text" id="schoolAbbr" maxlength="5" placeholder="e.g., UNN" class="input-upper" required />
+      <div class="hint">2–5 letters (e.g., UNN, MOUAU)</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="track">Academic Department / Track</label>
+    <select id="track" required>
+      <option value="Science">Science (Math, English, Physics, Chemistry, Biology)</option>
+      <option value="Art">Art (English, Literature, Government, CRS/IRS)</option>
+      <option value="Commercial">Commercial (Math, English, Economics, Accounting, Commerce)</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="parentPhone">Parent/Guardian Phone (For 2G SMS Alerts)</label>
+    <input type="tel" id="parentPhone" placeholder="e.g., 08031234567" required />
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" minlength="6" placeholder="At least 6 characters" required />
+    </div>
+    <div class="form-group">
+      <label for="passwordConfirm">Confirm Password</label>
+      <input type="password" id="passwordConfirm" minlength="6" placeholder="Type it again" required />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Recovery Email (optional)</label>
+    <input type="email" id="email" placeholder="you@example.com" />
+    <div class="hint">
+      ⚠ You will need an email to reset your password yourself. Without one, only a teacher can reset it.
+    </div>
+  </div>
+
+  <label class="consent-box">
+    <input type="checkbox" id="consentCheck" required />
+    <span>
+      I confirm parental/school consent to store my name, age, and attendance locally under NDPA-aligned data-minimisation guidelines.
+    </span>
+  </label>
+
+  <button type="submit" class="btn btn-primary btn-block">Generate My Student ID</button>
+</form>
+
+          <div class="auth-footer">
+            Already have an ID? <a href="login.html">Log in here</a>
+          </div>
+        </div>
+
+        <!-- Success Screen Showing Generated ID -->
+        <div id="id-result-box" class="id-result-box">
+          <div class="title-accent">✓ Registration Complete!</div>
+          <p class="success-text">
+            Write down or copy your unique Student ID below. You will use it to access your study space on any school device:
+          </p>
+          <div id="generated-id-display" class="generated-id">AAAA0001UNN</div>
+          <button type="button" id="copyIdBtn" class="btn btn-outline btn-block mb-10">
+            Copy Student ID
+          </button>
+          <a href="student-dashboard.html" class="btn btn-primary btn-block">
+            Enter My Study Space →
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/db.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/signup.js"></script>
+</body>
+</html>

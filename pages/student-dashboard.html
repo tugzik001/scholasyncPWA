@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Study Space — ScholaSync</title>
+  <meta name="theme-color" content="#faf9f6" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="navbar">
+      <a href="../index.html" class="brand">
+        <span class="brand-dot"></span>
+        scholasync
+      </a>
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode"></button>
+        <span class="pill green" id="offline-status">● Cached Offline</span>
+        <button type="button" id="logoutBtn" class="btn btn-outline">Switch Student ID</button>
+      </div>
+    </header>
+
+    <section class="dash-header">
+      <div>
+        <h1 id="student-greeting">Good day, Student ☀</h1>
+        <div class="meta-pills">
+          <span class="pill mono" id="student-id-pill">ID: AAAA0001UNN</span>
+          <span class="pill" id="student-track-pill">Department: Science</span>
+          <span class="pill" id="student-school-pill">School: UNN</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="overview-bar">
+      <div>
+        <strong class="progress-title" id="progress-label">0% Syllabus Completed</strong>
+        <div class="progress-sub" id="progress-sub">
+          Check off topics below as you revise for WAEC &amp; JAMB
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <div class="track-tabs">
+      <button type="button" class="track-btn" data-track="Science">Science Track</button>
+      <button type="button" class="track-btn" data-track="Art">Art Track</button>
+      <button type="button" class="track-btn" data-track="Commercial">Commercial Track</button>
+    </div>
+
+    <section class="subjects-grid" id="subjects-grid"></section>
+  </div>
+
+  <div class="modal-backdrop" id="noteModal">
+    <div class="modal-box">
+      <div class="pill green modal-tag">Offline WAEC/JAMB Study Guide</div>
+      <h2 id="modalTitle">Subject Notes</h2>
+      <div class="note-body" id="modalContent"></div>
+      <button type="button" class="btn btn-primary btn-block" id="closeModalBtn">Done Reading</button>
+    </div>
+  </div>  
+  <script src="../js/db.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/student.js"></script>
+</body>
+</html>

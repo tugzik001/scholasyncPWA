@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Attendance &amp; SMS Portal — ScholaSync</title>
+  <meta name="theme-color" content="#faf9f6" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="navbar">
+      <a href="../index.html" class="brand">
+        <span class="brand-dot"></span>
+        scholasync <span class="brand-sub">/ admin</span>
+      </a>
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode"></button>
+        <a href="signup.html" class="btn btn-outline">+ Register Student</a>
+        <button type="button" id="staffLogoutBtn" class="btn btn-ghost">Log out</button>
+      </div>
+    </header>
+
+    <section class="admin-header">
+      <div>
+        <h1>Weekly Attendance <span class="serif-italic">Register.</span></h1>
+        <p class="page-sub" id="admin-sub">
+          Synced with local database • Rows highlight red at 3+ missed classes
+        </p>
+      </div>
+    </section>
+
+    <section class="stats-row">
+      <div class="stat-card">
+        <span>Registered Students</span>
+        <strong id="stat-total">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Chronic Absentees (3+ Missed)</span>
+        <strong id="stat-flagged" class="text-danger">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>2G SMS Gateway Status</span>
+        <strong class="stat-gateway" id="stat-sms">● Ready (Low-Cost Queue)</strong>
+      </div>
+    </section>
+
+    <section class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name &amp; ID</th>
+            <th>Age</th>
+            <th>Weekly Attendance (Mon – Fri)</th>
+            <th>Status</th>
+            <th>Parent SMS Action</th>
+          </tr>
+        </thead>
+        <tbody id="attendance-tbody"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="smsModal">
+    <div class="modal-box modal-box-sm">
+      <div class="title-accent" id="smsModalTitle">📲 2G SMS Alert Queued &amp; Sent</div>
+      <p class="sms-recipient" id="smsRecipientLabel">
+        Recipient: 08031234567
+      </p>
+      <div class="sms-bubble" id="smsPreviewText"></div>
+      <p class="hint" id="smsDemoNote" hidden>Demo mode: this message is simulated. Connect an SMS provider (Termii / Africa's Talking) to send for real.</p>
+      <button type="button" class="btn btn-primary btn-block" id="closeSmsBtn">Done</button>
+    </div>
+  </div>
+
+  <script src="../js/db.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/sms.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

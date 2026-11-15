@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in — ScholaSync</title>
+  <meta name="theme-color" content="#faf9f6" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="navbar">
+      <a href="../index.html" class="brand">
+        <span class="brand-dot"></span>
+        scholasync
+      </a>
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode"></button>
+        <a href="signup.html" class="btn btn-primary">Get Student ID</a>
+      </div>
+    </header>
+
+    <main class="auth-wrapper">
+      <div class="auth-card">
+        <div class="role-tabs">
+          <button type="button" class="role-tab active" id="tab-student">Student Login</button>
+          <button type="button" class="role-tab" id="tab-staff">Staff / Admin</button>
+        </div>
+
+        <div id="login-error" class="error-msg"></div>
+
+        <!-- Student login -->
+        <div id="panel-student">
+          <h1>Welcome <span class="serif-italic">back.</span></h1>
+          <p class="auth-subtitle">Enter your Student ID and password to load your offline study space.</p>
+
+          <div class="demo-hint">
+            <strong>Pilot demo:</strong> ID <code>AAAA0000UNN</code> · password <code>demo1234</code>
+          </div>
+
+          <form id="student-login-form">
+            <div class="form-group">
+              <label for="studentId">Student ID</label>
+              <input
+                type="text"
+                id="studentId"
+                placeholder="e.g., AAAA0000UNN"
+                class="input-mono"
+                autocomplete="username"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="studentPassword">Password</label>
+              <input
+                type="password"
+                id="studentPassword"
+                placeholder="••••••"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Open Study Space
+            </button>
+          </form>
+
+          <div class="auth-footer">
+            New student? <a href="signup.html">Generate your Student ID</a><br />
+            Forgot password? <span class="muted">Ask a teacher to reset it.</span>
+          </div>
+        </div>
+
+        <!-- Staff / admin login -->
+        <div id="panel-staff" hidden>
+          <h1>Staff <span class="serif-italic">Portal.</span></h1>
+          <p class="auth-subtitle">Access your school's offline attendance register and 2G SMS parent alerts.</p>
+
+          <div class="demo-hint">
+            <strong>Pilot demo access:</strong> School Abbr <code>UNN</code> · Staff PIN <code>1234</code>
+          </div>
+
+          <form id="staff-login-form">
+            <div class="form-group">
+              <label for="staffSchoolAbbr">School Abbreviation</label>
+              <input
+                type="text"
+                id="staffSchoolAbbr"
+                placeholder="e.g., UNN"
+                class="input-upper"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="staffPin">Staff Access PIN</label>
+              <input
+                type="password"
+                id="staffPin"
+                placeholder="••••"
+                maxlength="6"
+                inputmode="numeric"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Open Attendance Dashboard
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/db.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/login.js"></script>
+</body>
+</html>
