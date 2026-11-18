@@ -109,7 +109,38 @@
     refreshRow(student);
     return tr;
   }
- 
+   // --- Create Class Logic ---
+  document.getElementById('createClassBtn').addEventListener('click', async function() {
+    const name = document.getElementById('newClassName').value.trim().toUpperCase();
+    if (!name) return alert('Enter a class name (e.g., SS1A)');
+    
+    const code = staff.school + '-' + name; // e.g., UNN-SS1A
+    
+    if (!navigator.onLine) {
+      alert("You must be online to create a new class so it can sync to the database.");
+      return;
+    }
+
+    try {
+      const res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/classes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': window.ScholaSupabase.config.anonKey,
+          'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
+        },
+        body: JSON.stringify({ school_abbr: staff.school, name: name, code: code })
+      });
+      
+      if (!res.ok) throw new Error('Class already exists or network error');
+      
+      document.getElementById('active-class-code').textContent = code;
+      document.getElementById('newClassName').value = '';
+      alert('Class created! Code: ' + code);
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  });
   function renderTable() {
     els.tbody.textContent = '';
     if (!students.length) {

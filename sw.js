@@ -1,5 +1,5 @@
 /* ScholaSync — sw.js */
-const CACHE_VERSION = 'v7';
+const CACHE_VERSION = 'v10';
 const CACHE = 'scholasync-' + CACHE_VERSION;
 
 const CORE = [
@@ -17,6 +17,7 @@ const CORE = [
   'js/student.js',
   'js/sms.js',
   'js/admin.js',
+  'js/school-portal.js',
   'pages/signup.html',
   'pages/login.html',
   'pages/student-dashboard.html',

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register School — ScholaSync</title>
+  <meta name="theme-color" content="#faf9f6" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  
+  <div class="container">
+    <header class="navbar">
+      <a href="../index.html" class="brand">
+        <span class="brand-dot"></span> scholasync
+      </a>
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode"></button>
+        <a href="login.html" class="btn btn-outline">Back to Login</a>
+      </div>
+    </header>
+
+    <main class="auth-wrapper">
+      <div class="auth-card auth-card-wide">
+        
+        <div id="signup-form-container">
+          <div class="pill-badge">● Institutional Onboarding</div>
+          <h1>Register your <span class="serif-italic">School.</span></h1>
+          <p class="auth-subtitle">
+            Create a unique School ID to grant your teachers access to the attendance dashboard.
+          </p>
+
+          <div id="school-error" class="error-msg"></div>
+
+          <form id="school-form">
+            <div class="form-group">
+              <label for="schoolName">School Name (Full)</label>
+              <input type="text" id="schoolName" placeholder="e.g., Community Secondary School" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="schoolAbbr">Preferred Abbreviation</label>
+                <input type="text" id="schoolAbbr" maxlength="5" placeholder="e.g., CSS" class="input-upper" required />
+                <div class="hint">2–5 letters. This cannot be changed later.</div>
+              </div>
+              <div class="form-group">
+                <label for="schoolType">School Type</label>
+                <select id="schoolType" required>
+                  <option value="">Select type...</option>
+                  <option value="Federal">Federal</option>
+                  <option value="State">State</option>
+                  <option value="Local Govt">Local Govt</option>
+                  <option value="Community">Community</option>
+                  <option value="Private">Private</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="schoolState">State</label>
+                <input type="text" id="schoolState" placeholder="e.g., Abia" required />
+              </div>
+              <div class="form-group">
+                <label for="schoolLga">LGA</label>
+                <input type="text" id="schoolLga" placeholder="e.g., Umuahia North" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="initiatorName">Authorized Initiator Name</label>
+                <input type="text" id="initiatorName" placeholder="e.g., Mr. John Doe" required />
+              </div>
+              <div class="form-group">
+                <label for="initiatorRole">Role</label>
+                <select id="initiatorRole" required>
+                  <option value="Principal">Principal</option>
+                  <option value="Proprietor">Proprietor</option>
+                  <option value="Vice Principal">Vice Principal</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="initiatorPhone">Initiator Phone Number</label>
+              <input type="tel" id="initiatorPhone" placeholder="e.g., 08031234567" required />
+            </div>
+            <div class="form-group">
+              <label for="initiatorEmail">Initiator Phone Email</label>
+              <input type="tel" id="initiatorEmail" placeholder="e.g., you@exanple.com" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="adminPassword">Admin Password</label>
+                <input type="password" id="adminPassword" minlength="6" placeholder="At least 6 chars" required />
+              </div>
+              <div class="form-group">
+                <label for="adminPasswordConfirm">Confirm Password</label>
+                <input type="password" id="adminPasswordConfirm" minlength="6" placeholder="Type it again" required />
+              </div>
+            </div>
+            <br>
+            <div class="hint" style="margin-top: 12px; text-align: center;">
+  Note: New school registrations are subject to verification by ScholaSync administrators before public listing.
+</div>
+            <button type="submit" class="btn btn-primary btn-block">Register School</button>
+          </form>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="success-box" class="id-result-box">
+          <div class="title-accent">✓ School Registered!</div>
+          <p class="success-text">
+            Your school ID has been generated. Please save it. You will use it to log in to the staff portal.
+          </p>
+          <div id="generated-school-id" class="generated-id">CSS</div>
+          <a href="login.html" class="btn btn-primary btn-block">Go to Staff Login</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/db.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/school-portal.js"></script>
+</body>
+</html>
