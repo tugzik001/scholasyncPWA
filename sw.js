@@ -1,5 +1,5 @@
 /* ScholaSync — sw.js */
-const CACHE_VERSION = 'v10';
+const CACHE_VERSION = 'v11';
 const CACHE = 'scholasync-' + CACHE_VERSION;
 
 const CORE = [
