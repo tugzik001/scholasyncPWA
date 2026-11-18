@@ -77,44 +77,36 @@
 
         <!-- Staff / admin login -->
         <div id="panel-staff" hidden>
-          <h1>Staff <span class="serif-italic">Portal.</span></h1>
-          <p class="auth-subtitle">Access your school's offline attendance register and 2G SMS parent alerts.</p>
+  <h1>Staff <span class="serif-italic">Portal.</span></h1>
+  <p class="auth-subtitle">Log in with your personal staff account.</p>
 
-          <div class="demo-hint">
-            <strong>Pilot demo access:</strong> School Abbr <code>UNN</code> · Staff PIN <code>1234</code>
-          </div>
+  <form id="staff-login-form-teacher">
+    <div class="form-group">
+      <label for="staffEmail">Staff Email</label>
+      <input type="email" id="staffEmail" placeholder="teacher@school.com" required />
+    </div>
+    <div class="form-group">
+      <label for="staffPassword">Password</label>
+      <input type="password" id="staffPassword" placeholder="••••••" required />
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Login as Teacher</button>
+  </form>
 
-          <form id="staff-login-form">
-            <div class="form-group">
-              <label for="staffSchoolAbbr">School Abbreviation</label>
-              <input
-                type="text"
-                id="staffSchoolAbbr"
-                placeholder="e.g., UNN"
-                class="input-upper"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="staffPin">Staff Access PIN</label>
-              <input
-                type="password"
-                id="staffPin"
-                placeholder="••••"
-                maxlength="6"
-                inputmode="numeric"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">
-              Open Attendance Dashboard
-            </button>
-            <div class="auth-footer">
-              Is your school not registered yet? <a href="school-portal.html">Register your school here</a>.
-            </div>
-          </form>
-        </div>
+  <form id="staff-login-form-principal" hidden>
+    <div class="form-group">
+      <label for="principalSchool">School Abbr</label>
+      <input type="text" id="principalSchool" placeholder="e.g., MOUA" required />
+    </div>
+    <div class="form-group">
+      <label for="principalPassword">Master Password</label>
+      <input type="password" id="principalPassword" placeholder="••••••" required />
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Login as Principal</button>
+  </form>
+  <div class="auth-footer">
+    Is your school not registered yet? <a href="school-portal.html">Register your school here</a>.
+  </div>
+</div>
       </div>
     </main>
   </div>

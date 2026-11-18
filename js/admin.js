@@ -4,13 +4,21 @@
  */
 (function () {
   'use strict';
- 
+
+  // 1. Get the staff member and verify they are logged in
   const staff = requireStaff();
+  
+  // 2. If no staff (not logged in), stop immediately
   if (!staff) return;
- 
+
+  // 3. NOW it is safe to update the DOM
+  document.getElementById('staff-name').textContent = staff.name || 'Teacher';
+  document.getElementById('staff-school').textContent = staff.school;
+
   const FLAG_AT = 3;
   const $ = (id) => document.getElementById(id);
   const els = {
+    // ...
     tbody: $('attendance-tbody'),
     total: $('stat-total'),
     flagged: $('stat-flagged'),
@@ -194,5 +202,57 @@
   renderTable();
   refreshStats();
   ScholaSMS.flush(); // send anything left queued from an offline session
+    // --- Add Teacher Logic ---
+  document.getElementById('addTeacherBtn').addEventListener('click', async function() {
+    const name = document.getElementById('newTeacherName').value.trim();
+    const email = document.getElementById('newTeacherEmail').value.trim().toLowerCase();
+    const pw = document.getElementById('newTeacherPassword').value;
+
+    if (!name || !email || pw.length < 6) {
+      return alert('Please enter a name, email, and a password of at least 6 characters.');
+    }
+
+    try {
+      // Hash the password
+      const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+      const salt = btoa(String.fromCharCode.apply(null, saltBytes));
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits']);
+      const bits = await crypto.subtle.deriveBits(
+        { name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' }, key, 256
+      );
+      const hash = btoa(String.fromCharCode.apply(null, new Uint8Array(bits)));
+
+      const res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/teachers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': window.ScholaSupabase.config.anonKey,
+          'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
+        },
+        body: JSON.stringify({
+          school_abbr: staff.school,
+          full_name: name,
+          email: email,
+          password_hash: hash,
+          salt: salt,
+          role: 'teacher'
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        if (err.includes('unique')) throw new Error('This email is already registered.');
+        throw new Error('Failed to add teacher');
+      }
+
+      alert('Teacher added successfully!');
+      document.getElementById('newTeacherName').value = '';
+      document.getElementById('newTeacherEmail').value = '';
+      document.getElementById('newTeacherPassword').value = '';
+    } catch (e) {
+      alert(e.message);
+    }
+  });
 })();
  

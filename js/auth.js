@@ -97,16 +97,16 @@
     return { ok: true, student: student };
   }
  
-    async function loginStaff(schoolInput, passwordInput) {
-    var school = String(schoolInput || '').trim().toUpperCase();
+      async function loginStaff(emailInput, passwordInput) {
+    var email = String(emailInput || '').trim().toLowerCase();
     var pw = String(passwordInput || '').trim();
     
-    if (!school || !pw) return { ok: false, message: 'Enter your school abbreviation and password.' };
+    if (!email || !pw) return { ok: false, message: 'Enter your email and password.' };
     
     // 1. If online and Supabase is configured, verify against cloud DB
     if (navigator.onLine && window.ScholaSupabase && window.ScholaSupabase.isConfigured()) {
       try {
-        var res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/schools?abbr=eq.' + school, {
+        var res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/teachers?email=eq.' + encodeURIComponent(email), {
           headers: {
             'apikey': window.ScholaSupabase.config.anonKey,
             'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
@@ -114,7 +114,7 @@
         });
         var data = await res.json();
         
-        if (data.length === 0) return { ok: false, message: 'School not found in registry.' };
+        if (data.length === 0) return { ok: false, message: 'Staff account not found.' };
         
         var authRecord = data[0];
         
@@ -123,34 +123,24 @@
         var enc = new TextEncoder();
         var key = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits']);
         var bits = await crypto.subtle.deriveBits(
-          { name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' },
-          key, 256
+          { name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' }, key, 256
         );
         var attemptHash = btoa(String.fromCharCode.apply(null, new Uint8Array(bits)));
         
         if (attemptHash !== authRecord.password_hash) {
-          return { ok: false, message: 'Incorrect staff password.' };
+          return { ok: false, message: 'Incorrect password.' };
         }
         
-        // Success! Save session locally so they can access admin offline later
-        DB.setSession({ role: 'staff', school: school });
-        return { ok: true, school: school };
+        // Save session locally
+        DB.setSession({ role: 'staff', school: authRecord.school_abbr, email: authRecord.email, name: authRecord.full_name });
+        return { ok: true, school: authRecord.school_abbr };
         
       } catch (e) {
-        // If network fails mid-request, fall through to local check
+        return { ok: false, message: 'Network error. You must be online to log in.' };
       }
     }
-
-    // 2. Local Fallback (e.g., if offline, or using the old demo UNN/1234)
-    if (!DB.schoolExists(school) && school !== 'UNN') {
-       return { ok: false, message: 'You must be online to log in for the first time.' };
-    }
-    if (school === 'UNN' && pw === '1234') {
-      DB.setSession({ role: 'staff', school: school });
-      return { ok: true, school: school };
-    }
     
-    return { ok: false, message: 'Incorrect password, or network unavailable.' };
+    return { ok: false, message: 'You must be online to log in as staff.' };
   }
  
   function getCurrentStudent() {
