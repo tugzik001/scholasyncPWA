@@ -24,8 +24,8 @@
   'use strict';
 
   var CONFIG = {
-    url: '',        // e.g. 'https://xxxx.supabase.co'
-    anonKey: ''     // project anon key (safe to expose in browser)
+    url: 'https://hosipziojpsgtjqlahle.supabase.co',        // e.g. 'https://xxxx.supabase.co'
+    anonKey: 'sb_publishable_LyOi3KXK06mnN-rH_DKpeA_ipv2tVI5'     // project anon key (safe to expose in browser)
   };
 
   function isConfigured() {
