@@ -53,4 +53,46 @@
     if (result.ok) window.location.href = 'admin.html';
     else showError(result.message);
   });
+    // --- Principal Login Tabs ---
+  const tabTeacher = document.getElementById('staff-tab-teacher');
+  const tabPrincipal = document.getElementById('staff-tab-principal');
+  const formTeacher = document.getElementById('staff-login-form-teacher');
+  const formPrincipal = document.getElementById('staff-login-form-principal');
+
+  if (tabTeacher && tabPrincipal) {
+    tabTeacher.addEventListener('click', () => {
+      tabTeacher.classList.add('active');
+      tabPrincipal.classList.remove('active');
+      formTeacher.hidden = false;
+      formPrincipal.hidden = true;
+    });
+
+    tabPrincipal.addEventListener('click', () => {
+      tabPrincipal.classList.add('active');
+      tabTeacher.classList.remove('active');
+      formTeacher.hidden = true;
+      formPrincipal.hidden = false;
+    });
+
+    formPrincipal.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      clearError();
+      const btn = formPrincipal.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Checking...';
+      try {
+        // We will reuse loginStaff, but pass the school abbr and master password
+        const result = await loginStaff(
+          document.getElementById('principalSchool').value,
+          document.getElementById('principalPassword').value,
+          true // isPrincipal flag
+        );
+        if (result.ok) window.location.href = 'admin.html';
+        else showError(result.message);
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Login as Principal';
+      }
+    });
+  }
 })();

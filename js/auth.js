@@ -97,16 +97,17 @@
     return { ok: true, student: student };
   }
  
-      async function loginStaff(emailInput, passwordInput) {
-    var email = String(emailInput || '').trim().toLowerCase();
+        async function loginStaff(identifier, passwordInput, isPrincipal = false) {
     var pw = String(passwordInput || '').trim();
-    
-    if (!email || !pw) return { ok: false, message: 'Enter your email and password.' };
-    
-    // 1. If online and Supabase is configured, verify against cloud DB
+    if (!identifier || !pw) return { ok: false, message: 'Enter your details.' };
+
     if (navigator.onLine && window.ScholaSupabase && window.ScholaSupabase.isConfigured()) {
       try {
-        var res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/teachers?email=eq.' + encodeURIComponent(email), {
+        var endpoint = isPrincipal 
+          ? '/rest/v1/schools?abbr=eq.' + identifier.toUpperCase()
+          : '/rest/v1/teachers?email=eq.' + encodeURIComponent(identifier.toLowerCase());
+          
+        var res = await fetch(window.ScholaSupabase.config.url + endpoint, {
           headers: {
             'apikey': window.ScholaSupabase.config.anonKey,
             'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
@@ -114,11 +115,9 @@
         });
         var data = await res.json();
         
-        if (data.length === 0) return { ok: false, message: 'Staff account not found.' };
-        
+        if (data.length === 0) return { ok: false, message: 'Account not found.' };
         var authRecord = data[0];
         
-        // Hash the attempted password
         var saltBytes = Uint8Array.from(atob(authRecord.salt), c => c.charCodeAt(0));
         var enc = new TextEncoder();
         var key = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits']);
@@ -127,20 +126,20 @@
         );
         var attemptHash = btoa(String.fromCharCode.apply(null, new Uint8Array(bits)));
         
-        if (attemptHash !== authRecord.password_hash) {
-          return { ok: false, message: 'Incorrect password.' };
-        }
+        if (attemptHash !== authRecord.password_hash) return { ok: false, message: 'Incorrect password.' };
         
-        // Save session locally
-        DB.setSession({ role: 'staff', school: authRecord.school_abbr, email: authRecord.email, name: authRecord.full_name });
-        return { ok: true, school: authRecord.school_abbr };
-        
+        DB.setSession({ 
+          role: 'staff', 
+          school: isPrincipal ? authRecord.abbr : authRecord.school_abbr, 
+          email: isPrincipal ? authRecord.initiator_email : authRecord.email, 
+          name: isPrincipal ? authRecord.initiator_name : authRecord.full_name 
+        });
+        return { ok: true };
       } catch (e) {
-        return { ok: false, message: 'Network error. You must be online to log in.' };
+        return { ok: false, message: 'Network error.' };
       }
     }
-    
-    return { ok: false, message: 'You must be online to log in as staff.' };
+    return { ok: false, message: 'You must be online to log in.' };
   }
  
   function getCurrentStudent() {
