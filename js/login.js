@@ -1,4 +1,4 @@
-/* ScholaSync — login.js (patched: password + async + #staff) */
+/* ScholaSync — login.js */
 (function () {
   'use strict';
 
@@ -8,63 +8,63 @@
   var panelStaff = document.getElementById('panel-staff');
   var errorBox = document.getElementById('login-error');
 
-  function showError(msg) { errorBox.textContent = msg; errorBox.style.display = 'block'; }
-  function clearError() { errorBox.style.display = 'none'; }
+  function showError(msg) { 
+    if (errorBox) { errorBox.textContent = msg; errorBox.style.display = 'block'; }
+    else { alert(msg); }
+  }
+  function clearError() { 
+    if (errorBox) errorBox.style.display = 'none'; 
+  }
 
   function showTab(role) {
     var isStudent = role === 'student';
-    tabStudent.classList.toggle('active', isStudent);
-    tabStaff.classList.toggle('active', !isStudent);
-    panelStudent.hidden = !isStudent;
-    panelStaff.hidden = isStudent;
+    if (tabStudent) tabStudent.classList.toggle('active', isStudent);
+    if (tabStaff) tabStaff.classList.toggle('active', !isStudent);
+    if (panelStudent) panelStudent.hidden = !isStudent;
+    if (panelStaff) panelStaff.hidden = isStudent;
     clearError();
   }
 
-  tabStudent.addEventListener('click', function () { showTab('student'); });
-  tabStaff.addEventListener('click', function () { showTab('staff'); });
+  if (tabStudent) tabStudent.addEventListener('click', function () { showTab('student'); });
+  if (tabStaff) tabStaff.addEventListener('click', function () { showTab('staff'); });
   if (window.location.hash === '#staff') showTab('staff');
 
-  document.getElementById('student-login-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    clearError();
-    var btn = e.target.querySelector('button[type="submit"]');
-    btn.disabled = true; btn.textContent = 'Checking…';
-    try {
-      var result = await loginStudent(
-        document.getElementById('studentId').value,
-        document.getElementById('studentPassword').value
-      );
-      if (result.ok) window.location.href = 'student-dashboard.html';
-      else showError(result.message);
-    } catch (err) {
-      showError(err.message || 'Login failed.');
-    } finally {
-      btn.disabled = false; btn.textContent = 'Open Study Space';
-    }
-  });
+  /* ---------- 1. Student Login ---------- */
+  var studentForm = document.getElementById('student-login-form');
+  if (studentForm) {
+    studentForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      clearError();
+      var btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Checking…';
+      try {
+        var result = await loginStudent(
+          document.getElementById('studentId').value,
+          document.getElementById('studentPassword').value
+        );
+        if (result.ok) window.location.href = 'student-dashboard.html';
+        else showError(result.message);
+      } catch (err) {
+        showError(err.message || 'Login failed.');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Open Study Space';
+      }
+    });
+  }
 
-  document.getElementById('staff-login-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    clearError();
-    var result = loginStaff(
-      document.getElementById('staffSchoolAbbr').value,
-      document.getElementById('staffPin').value
-    );
-    if (result.ok) window.location.href = 'admin.html';
-    else showError(result.message);
-  });
-    // --- Principal Login Tabs ---
-  const tabTeacher = document.getElementById('staff-tab-teacher');
-  const tabPrincipal = document.getElementById('staff-tab-principal');
-  const formTeacher = document.getElementById('staff-login-form-teacher');
-  const formPrincipal = document.getElementById('staff-login-form-principal');
+  /* ---------- 2. Staff Tabs (Teacher vs Principal) ---------- */
+  var tabTeacher = document.getElementById('staff-tab-teacher');
+  var tabPrincipal = document.getElementById('staff-tab-principal');
+  var formTeacher = document.getElementById('staff-login-form-teacher');
+  var formPrincipal = document.getElementById('staff-login-form-principal');
 
-  if (tabTeacher && tabPrincipal) {
+  if (tabTeacher && tabPrincipal && formTeacher && formPrincipal) {
     tabTeacher.addEventListener('click', () => {
       tabTeacher.classList.add('active');
       tabPrincipal.classList.remove('active');
       formTeacher.hidden = false;
       formPrincipal.hidden = true;
+      clearError();
     });
 
     tabPrincipal.addEventListener('click', () => {
@@ -72,27 +72,55 @@
       tabTeacher.classList.remove('active');
       formTeacher.hidden = true;
       formPrincipal.hidden = false;
+      clearError();
     });
+  }
 
-    formPrincipal.addEventListener('submit', async function(e) {
+  /* ---------- 3. Teacher Login ---------- */
+  if (formTeacher) {
+    formTeacher.addEventListener('submit', async function (e) {
       e.preventDefault();
       clearError();
-      const btn = formPrincipal.querySelector('button[type="submit"]');
-      btn.disabled = true; btn.textContent = 'Checking...';
+      var btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Checking…';
       try {
-        // We will reuse loginStaff, but pass the school abbr and master password
-        const result = await loginStaff(
-          document.getElementById('principalSchool').value,
-          document.getElementById('principalPassword').value,
-          true // isPrincipal flag
+        var result = await loginStaff(
+          document.getElementById('teacherSchoolAbbr').value,
+          document.getElementById('staffEmail').value,
+          document.getElementById('staffPassword').value
         );
         if (result.ok) window.location.href = 'admin.html';
         else showError(result.message);
       } catch (err) {
-        showError(err.message);
+        showError(err.message || 'Login failed.');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Login as Teacher';
+      }
+    });
+  }
+
+  /* ---------- 4. Principal Login ---------- */
+  if (formPrincipal) {
+    formPrincipal.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      clearError();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Checking...';
+      try {
+        // FIXED: Pass 'principal' as the second argument (email), and the password as the third
+        const result = await loginStaff(
+          document.getElementById('principalSchool').value,
+          'principal', 
+          document.getElementById('principalPassword').value
+        );
+        if (result.ok) window.location.href = 'admin.html';
+        else showError(result.message);
+      } catch (err) {
+        showError(err.message || 'Login failed.');
       } finally {
         btn.disabled = false; btn.textContent = 'Login as Principal';
       }
     });
   }
+
 })();

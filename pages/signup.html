@@ -34,86 +34,70 @@
 
           <div id="signup-error" class="error-msg"></div>
 
-          <form id="signup-form">
-  <div class="form-group">
-  <label for="schoolAbbr">School</label>
-  <div class="form-group">
-  <label for="schoolAbbr">School Abbreviation</label>
-  <input 
-    type="text" 
-    id="schoolAbbr" 
-    list="school-options" 
-    class="input-upper" 
-    placeholder="e.g., UNN" 
-    autocomplete="off"
-    required 
-  />
-  <datalist id="school-options">
-    <!-- JS will populate this -->
-  </datalist>
-  <div class="hint">Start typing your school's abbreviation to verify it.</div>
-</div>
-</div>
+                    <form id="signup-form">
+            <div class="form-group">
+              <label for="fullName">Student Full Name</label>
+              <input type="text" id="fullName" placeholder="e.g., Chinedu Okafor" required />
+            </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      <label for="age">Age</label>
-      <input type="number" id="age" min="10" max="25" placeholder="enter your age" required />
-    </div>
-    <div class="form-group">
-      <label for="schoolAbbr">School Abbr.</label>
-      <input type="text" id="schoolAbbr" maxlength="5" placeholder="FUTO" class="input-upper" required />
-      <div class="hint">2–5 letters (e.g., FUTO, MOUAU)</div>
-    </div>
-  </div>
+            <div class="form-group">
+              <label for="schoolAbbr">School Abbreviation</label>
+              <input type="text" id="schoolAbbr" list="school-options" class="input-upper" placeholder="e.g., UNN" autocomplete="off" required />
+              <datalist id="school-options">
+                <!-- JS will populate this -->
+              </datalist>
+              <div class="hint">Start typing your school's abbreviation to verify it.</div>
+            </div>
 
-  <div class="form-group">
-    <label for="track">Academic Department / Track</label>
-    <select id="track" required>
-      <option value="Science">Science</option>
-      <option value="Art">Art </option>
-      <option value="Commercial">Commercial</option>
-    </select>
-  </div>
-  <div class="form-group">
-  <label for="classCode">Class Code (from your teacher)</label>
-  <input type="text" id="classCode" placeholder="e.g., UNN-SS1A" class="input-upper" required />
-  <div class="hint">Ask your teacher for the unique code for your class.</div>
-</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" min="10" max="25" placeholder="e.g., 16" required />
+              </div>
+              <div class="form-group">
+                <label for="classCode">Class Code</label>
+                <input type="text" id="classCode" placeholder="e.g., UNN-SS1A" class="input-upper" required />
+              </div>
+            </div>
 
-  <div class="form-group">
-    <label for="parentPhone">Parent/Guardian Phone (For 2G SMS Alerts)</label>
-    <input type="tel" id="parentPhone" placeholder="e.g., 08031234567" required />
-  </div>
+            <div class="form-group">
+              <label for="track">Academic Department / Track</label>
+              <select id="track" required>
+                <option value="Science">Science</option>
+                <option value="Art">Art</option>
+                <option value="Commercial">Commercial</option>
+              </select>
+            </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" minlength="6" placeholder="At least 6 characters" required />
-    </div>
-    <div class="form-group">
-      <label for="passwordConfirm">Confirm Password</label>
-      <input type="password" id="passwordConfirm" minlength="6" placeholder="Type it again" required />
-    </div>
-  </div>
+            <div class="form-group">
+              <label for="parentPhone">Parent/Guardian Phone (For 2G SMS Alerts)</label>
+              <input type="tel" id="parentPhone" placeholder="e.g., 08031234567" required />
+            </div>
 
-  <div class="form-group">
-    <label for="email">Recovery Email (optional)</label>
-    <input type="email" id="email" placeholder="you@example.com" />
-    <div class="hint">
-      ⚠ You will need an email to reset your password yourself. Without one, only a teacher can reset it.
-    </div>
-  </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" minlength="6" placeholder="At least 6 characters" required />
+              </div>
+              <div class="form-group">
+                <label for="passwordConfirm">Confirm Password</label>
+                <input type="password" id="passwordConfirm" minlength="6" placeholder="Type it again" required />
+              </div>
+            </div>
 
-  <label class="consent-box">
-    <input type="checkbox" id="consentCheck" required />
-    <span>
-      I confirm parental/school consent to store my name, age, and attendance locally under NDPA-aligned data-minimisation guidelines.
-    </span>
-  </label>
+            <div class="form-group">
+              <label for="email">Recovery Email (optional)</label>
+              <input type="email" id="email" placeholder="you@example.com" />
+              <div class="hint">⚠ You will need an email to reset your password yourself. Without one, only a teacher can reset it.</div>
+            </div>
 
-  <button type="submit" class="btn btn-primary btn-block">Generate My Student ID</button>
-</form>
+            <label class="consent-box">
+              <input type="checkbox" id="consentCheck" required />
+              <span>I confirm parental/school consent to store my name, age, and attendance locally under NDPA-aligned data-minimisation guidelines.</span>
+            </label>
+
+            <button type="submit" class="btn btn-primary btn-block">Generate My Student ID</button>
+          </form>
 
           <div class="auth-footer">
             Already have an ID? <a href="login.html">Log in here</a>

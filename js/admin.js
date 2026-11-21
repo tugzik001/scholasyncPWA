@@ -1,24 +1,16 @@
-/* ScholaSync — admin.js : controller for pages/admin.html
- * Weekly Mon–Fri attendance register, 3+ absence red flags and parent SMS.
- * Needs: db.js, auth.js, sms.js
- */
+/* ScholaSync — admin.js */
 (function () {
   'use strict';
 
-  // 1. Get the staff member and verify they are logged in
   const staff = requireStaff();
-  
-  // 2. If no staff (not logged in), stop immediately
   if (!staff) return;
 
-  // 3. NOW it is safe to update the DOM
   document.getElementById('staff-name').textContent = staff.name || 'Teacher';
   document.getElementById('staff-school').textContent = staff.school;
 
   const FLAG_AT = 3;
   const $ = (id) => document.getElementById(id);
   const els = {
-    // ...
     tbody: $('attendance-tbody'),
     total: $('stat-total'),
     flagged: $('stat-flagged'),
@@ -30,14 +22,64 @@
     recipient: $('smsRecipientLabel'),
     preview: $('smsPreviewText'),
     demoNote: $('smsDemoNote'),
-    closeSms: $('closeSmsBtn')
+    closeSms: $('closeSmsBtn'),
+    removeModal: $('removeModal'),
+    removeText: $('removeModalText'),
+    cancelRemove: $('cancelRemoveBtn'),
+    confirmRemove: $('confirmRemoveBtn')
   };
- 
-  const students = ScholaDB.getStudentsBySchool(staff.school);
-  const rows = {}; // student id -> { tr, badge, btn }
- 
+
+  let students = []; // Will be populated from Supabase or local
+  const rows = {};
+  let studentToRemove = null;
+
   const missed = (s) => ScholaSMS.absences(s);
- 
+
+  /* ---------- Fetch Students ---------- */
+  async function loadStudents() {
+    if (navigator.onLine && window.ScholaSupabase && window.ScholaSupabase.isConfigured()) {
+      try {
+        const res = await fetch(window.ScholaSupabase.config.url + `/rest/v1/students?school_abbr=eq.${staff.school}`, {
+          headers: {
+            'apikey': window.ScholaSupabase.config.anonKey,
+            'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
+          }
+        });
+        const cloudStudents = await res.json();
+        
+        // Merge with local data for attendance progress
+        const localStudents = ScholaDB.getStudentsBySchool(staff.school);
+        
+        students = cloudStudents.map(cs => {
+          const local = localStudents.find(ls => ls.id === cs.id);
+          return {
+            id: cs.id,
+            fullName: cs.full_name,
+            age: cs.age,
+            schoolAbbr: cs.school_abbr,
+            classCode: cs.class_code,
+            track: cs.track,
+            parentPhone: cs.parent_phone,
+            attendance: local ? local.attendance : [true, true, true, true, true],
+            progress: local ? local.progress : {}
+          };
+        });
+        
+        // Save cloud data locally so it works offline next time
+        students.forEach(s => ScholaDB.saveStudent(s));
+        
+      } catch (err) {
+        console.warn('Offline or network error. Falling back to local database.');
+        students = ScholaDB.getStudentsBySchool(staff.school);
+      }
+    } else {
+      students = ScholaDB.getStudentsBySchool(staff.school);
+    }
+    
+    renderTable();
+    refreshStats();
+  }
+
   /* ---------- stats ---------- */
   function refreshStats() {
     els.total.textContent = students.length;
@@ -49,10 +91,11 @@
       ? '● Ready (Low-Cost Queue)' + (pending ? ' · ' + pending + ' queued' : '')
       : '● Offline · ' + pending + ' queued';
   }
- 
+
   /* ---------- rows ---------- */
   function refreshRow(student) {
     const r = rows[student.id];
+    if (!r) return;
     const n = missed(student);
     const flagged = n >= FLAG_AT;
  
@@ -62,13 +105,13 @@
     r.btn.className = 'btn-sms' + (flagged ? '' : ' normal');
     r.btn.textContent = flagged ? 'Send Alert' : 'Send Update';
   }
- 
+
   function cell(tr) {
     const td = document.createElement('td');
     tr.appendChild(td);
     return td;
   }
- 
+
   function buildRow(student) {
     const tr = document.createElement('tr');
  
@@ -78,7 +121,7 @@
     name.textContent = student.fullName;
     const id = document.createElement('span');
     id.className = 'cell-id';
-    id.textContent = student.id;
+    id.textContent = student.id + (student.classCode ? ' • ' + student.classCode : '');
     nameTd.append(name, id);
  
     cell(tr).textContent = student.age;
@@ -108,53 +151,32 @@
     const badge = document.createElement('span');
     cell(tr).appendChild(badge);
  
+    const actionTd = cell(tr);
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.addEventListener('click', () => openSms(student));
-    cell(tr).appendChild(btn);
+    actionTd.appendChild(btn);
+
+    // Remove Button
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn-ghost text-danger';
+    removeBtn.style.marginLeft = '8px';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => openRemoveModal(student));
+    actionTd.appendChild(removeBtn);
  
     rows[student.id] = { tr: tr, badge: badge, btn: btn };
     refreshRow(student);
     return tr;
   }
-   // --- Create Class Logic ---
-  document.getElementById('createClassBtn').addEventListener('click', async function() {
-    const name = document.getElementById('newClassName').value.trim().toUpperCase();
-    if (!name) return alert('Enter a class name (e.g., SS1A)');
-    
-    const code = staff.school + '-' + name; // e.g., UNN-SS1A
-    
-    if (!navigator.onLine) {
-      alert("You must be online to create a new class so it can sync to the database.");
-      return;
-    }
 
-    try {
-      const res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/classes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': window.ScholaSupabase.config.anonKey,
-          'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
-        },
-        body: JSON.stringify({ school_abbr: staff.school, name: name, code: code })
-      });
-      
-      if (!res.ok) throw new Error('Class already exists or network error');
-      
-      document.getElementById('active-class-code').textContent = code;
-      document.getElementById('newClassName').value = '';
-      alert('Class created! Code: ' + code);
-    } catch (e) {
-      alert('Error: ' + e.message);
-    }
-  });
   function renderTable() {
     els.tbody.textContent = '';
     if (!students.length) {
       const tr = document.createElement('tr');
       const td = document.createElement('td');
-      td.colSpan = 5;
+      td.colSpan = 6;
       td.className = 'empty-state';
       td.textContent = 'No students registered for ' + staff.school + ' yet.';
       tr.appendChild(td);
@@ -163,7 +185,46 @@
     }
     students.forEach((s) => els.tbody.appendChild(buildRow(s)));
   }
- 
+
+  /* ---------- Remove Student Logic ---------- */
+  function openRemoveModal(student) {
+    studentToRemove = student;
+    els.removeText.textContent = `Are you sure you want to remove ${student.fullName} from ${student.classCode || 'this school'}? This cannot be undone.`;
+    els.removeModal.classList.add('open');
+  }
+
+  els.cancelRemove.addEventListener('click', () => {
+    els.removeModal.classList.remove('open');
+    studentToRemove = null;
+  });
+
+  els.confirmRemove.addEventListener('click', async () => {
+    if (!studentToRemove) return;
+    
+    // Remove locally
+    let localStudents = ScholaDB.getStudents();
+    localStudents = localStudents.filter(s => s.id !== studentToRemove.id);
+    ScholaDB.saveStudents(localStudents);
+    
+    // Remove from Supabase
+    if (navigator.onLine && window.ScholaSupabase && window.ScholaSupabase.isConfigured()) {
+       try {
+         await fetch(window.ScholaSupabase.config.url + `/rest/v1/students?id=eq.${studentToRemove.id}`, {
+            method: 'DELETE',
+            headers: {
+              'apikey': window.ScholaSupabase.config.anonKey,
+              'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
+            }
+         });
+       } catch (e) {
+         console.warn('Failed to delete from cloud, but removed locally.');
+       }
+    }
+    
+    els.removeModal.classList.remove('open');
+    loadStudents(); // Refresh the list
+  });
+
   /* ---------- SMS modal ---------- */
   async function openSms(student) {
     const msg = ScholaSMS.buildMessage(student);
@@ -180,12 +241,12 @@
         : '📲 2G SMS Queued · sends when signal returns';
     refreshStats();
   }
- 
+
   function closeSms() {
     els.modal.classList.remove('open');
   }
- 
-  /* ---------- wiring ---------- */
+
+  /* ---------- Wiring ---------- */
   els.closeSms.addEventListener('click', closeSms);
   els.modal.addEventListener('click', (e) => {
     if (e.target === els.modal) closeSms();
@@ -194,33 +255,42 @@
     if (e.key === 'Escape') closeSms();
   });
   els.logout.addEventListener('click', logout);
-  document.addEventListener('ss:sms-updated', refreshStats);
-  window.addEventListener('online', refreshStats);
-  window.addEventListener('offline', refreshStats);
- 
-  els.sub.textContent = staff.school + ' • Synced with local database • Rows highlight red at ' + FLAG_AT + '+ missed classes';
-  renderTable();
-  refreshStats();
-  ScholaSMS.flush(); // send anything left queued from an offline session
-    // --- Add Teacher Logic ---
+  
+  document.getElementById('createClassBtn').addEventListener('click', async function() {
+    const name = document.getElementById('newClassName').value.trim().toUpperCase();
+    if (!name) return alert('Enter a class name (e.g., SS1A)');
+    const code = staff.school + '-' + name;
+    if (!navigator.onLine) return alert("You must be online to create a class.");
+    try {
+      const res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/classes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': window.ScholaSupabase.config.anonKey,
+          'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
+        },
+        body: JSON.stringify({ school_abbr: staff.school, name: name, code: code })
+      });
+      if (!res.ok) throw new Error('Class already exists.');
+      document.getElementById('active-class-code').textContent = code;
+      document.getElementById('newClassName').value = '';
+      alert('Class created! Code: ' + code);
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  });
+
   document.getElementById('addTeacherBtn').addEventListener('click', async function() {
     const name = document.getElementById('newTeacherName').value.trim();
     const email = document.getElementById('newTeacherEmail').value.trim().toLowerCase();
     const pw = document.getElementById('newTeacherPassword').value;
-
-    if (!name || !email || pw.length < 6) {
-      return alert('Please enter a name, email, and a password of at least 6 characters.');
-    }
-
+    if (!name || !email || pw.length < 6) return alert('Enter a name, email, and 6+ char password.');
     try {
-      // Hash the password
       const saltBytes = crypto.getRandomValues(new Uint8Array(16));
       const salt = btoa(String.fromCharCode.apply(null, saltBytes));
       const enc = new TextEncoder();
       const key = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits']);
-      const bits = await crypto.subtle.deriveBits(
-        { name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' }, key, 256
-      );
+      const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' }, key, 256);
       const hash = btoa(String.fromCharCode.apply(null, new Uint8Array(bits)));
 
       const res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/teachers', {
@@ -230,22 +300,9 @@
           'apikey': window.ScholaSupabase.config.anonKey,
           'Authorization': 'Bearer ' + window.ScholaSupabase.config.anonKey
         },
-        body: JSON.stringify({
-          school_abbr: staff.school,
-          full_name: name,
-          email: email,
-          password_hash: hash,
-          salt: salt,
-          role: 'teacher'
-        })
+        body: JSON.stringify({ school_abbr: staff.school, full_name: name, email: email, password_hash: hash, salt: salt, role: 'teacher' })
       });
-
-      if (!res.ok) {
-        const err = await res.text();
-        if (err.includes('unique')) throw new Error('This email is already registered.');
-        throw new Error('Failed to add teacher');
-      }
-
+      if (!res.ok) throw new Error('Email already registered.');
       alert('Teacher added successfully!');
       document.getElementById('newTeacherName').value = '';
       document.getElementById('newTeacherEmail').value = '';
@@ -254,5 +311,9 @@
       alert(e.message);
     }
   });
+
+  // Initialize
+  els.sub.textContent = staff.school + ' • Synced with local database • Rows highlight red at ' + FLAG_AT + '+ missed classes';
+  loadStudents();
+  ScholaSMS.flush();
 })();
- 

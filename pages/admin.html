@@ -37,7 +37,7 @@
 </section>
 <section class="stats-row" style="grid-template-columns: 1fr;">
   <div class="stat-card">
-    <span>Add a Teacher to MOUA</span>
+    <span>Create a Teacher Account</span>
     <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
       <input type="text" id="newTeacherName" placeholder="Teacher's Full Name" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border); flex: 1;" />
       <input type="email" id="newTeacherEmail" placeholder="Teacher's Email" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border); flex: 1;" />
@@ -96,7 +96,16 @@
       <button type="button" class="btn btn-primary btn-block" id="closeSmsBtn">Done</button>
     </div>
   </div>
-
+  <div class="modal-backdrop" id="removeModal">
+  <div class="modal-box modal-box-sm">
+    <div class="title-accent text-danger">⚠ Remove Student</div>
+    <p id="removeModalText">Are you sure you want to remove this student?</p>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button type="button" class="btn btn-outline" id="cancelRemoveBtn">Cancel</button>
+      <button type="button" class="btn btn-sms" id="confirmRemoveBtn">Yes, Remove</button>
+    </div>
+  </div>
+</div>
   <script src="../js/db.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/sms.js"></script>
