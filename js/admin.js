@@ -262,6 +262,10 @@
     const code = staff.school + '-' + name;
     if (!navigator.onLine) return alert("You must be online to create a class.");
     try {
+          if (!window.ScholaSupabase || !window.ScholaSupabase.isConfigured()) {
+      alert("Database not configured. Cannot create class.");
+      return;
+    }
       const res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/classes', {
         method: 'POST',
         headers: {
@@ -292,7 +296,10 @@
       const key = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits']);
       const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' }, key, 256);
       const hash = btoa(String.fromCharCode.apply(null, new Uint8Array(bits)));
-
+          if (!window.ScholaSupabase || !window.ScholaSupabase.isConfigured()) {
+      alert("Database not configured. Cannot create class.");
+      return;
+    }
       const res = await fetch(window.ScholaSupabase.config.url + '/rest/v1/teachers', {
         method: 'POST',
         headers: {

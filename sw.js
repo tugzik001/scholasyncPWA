@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v14';
+const CACHE_VERSION = 'v16';
 const CACHE = 'scholasync-' + CACHE_VERSION;
 
 const CORE = [
