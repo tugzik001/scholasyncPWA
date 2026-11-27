@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Registration — ScholaSync</title>
+  <meta name="theme-color" content="#faf9f6" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="shortcut icon" href="../assets/icons/logo.jpg" type="image/x-icon">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="navbar">
+      <a href="../index.html" class="brand">
+        <span class="brand-dot"></span> scholasync
+      </a>
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode"></button>
+        <a href="login.html" class="btn btn-outline">Back to Login</a>
+      </div>
+    </header>
+
+    <main class="auth-wrapper">
+      <div class="auth-card auth-card-wide">
+        <div class="pill-badge">● Staff Onboarding</div>
+        <h1>Teacher <span class="serif-italic">Registration.</span></h1>
+        <p class="auth-subtitle">
+          Join your school's staff portal. If you have an invite code from your Principal, you will be approved instantly.
+        </p>
+
+        <div id="teacher-reg-error" class="error-msg"></div>
+
+        <form id="teacher-reg-form">
+          <div class="form-group">
+            <label for="regTeacherName">Full Name</label>
+            <input type="text" id="regTeacherName" placeholder="e.g., Mr. John Doe" required />
+          </div>
+
+          <div class="form-group">
+            <label for="regTeacherSchool">School</label>
+            <select id="regTeacherSchool" required>
+              <option value="">Loading schools...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="regTeacherEmail">Email Address</label>
+            <input type="email" id="regTeacherEmail" placeholder="teacher@school.com" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regTeacherPassword">Password</label>
+              <input type="password" id="regTeacherPassword" minlength="6" placeholder="At least 6 chars" required />
+            </div>
+            <div class="form-group">
+              <label for="regTeacherPasswordConfirm">Confirm Password</label>
+              <input type="password" id="regTeacherPasswordConfirm" minlength="6" placeholder="Type it again" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="regTeacherInviteCode">Invite Code (Optional)</label>
+            <input type="text" id="regTeacherInviteCode" placeholder="e.g., UNN-A1B2C" class="input-upper" />
+            <div class="hint">Have a code? Enter it for instant access. No code? Your Principal will need to manually approve you.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Submit Registration</button>
+        </form>
+
+        <div class="auth-footer">
+          Already have an account? <a href="login.html">Log in here</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/db.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/teacher-signup.js"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <title>Staff Attendance &amp; SMS Portal — ScholaSync</title>
   <meta name="theme-color" content="#faf9f6" />
   <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="shortcut icon" href="assets\icons\logo.jpg" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/icons/logo.jpg" type="image/x-icon">
   <script src="../js/theme.js"></script>
 </head>
 <body>
@@ -22,30 +22,42 @@
         <button type="button" id="staffLogoutBtn" class="btn btn-ghost">Log out</button>
       </div>
     </header>
-    <section class="stats-row" style="grid-template-columns: 1fr 2fr;">
-  <div class="stat-card">
-    <span>Create New Class</span>
-    <div style="display: flex; gap: 10px; margin-top: 10px;">
-      <input type="text" id="newClassName" placeholder="e.g., SS1A" class="input-upper" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border);" />
-      <button type="button" class="btn btn-primary" id="createClassBtn">Create</button>
-    </div>
-  </div>
-  <div class="stat-card">
-    <span>Active Class Code (Share with students)</span>
-    <strong class="stat-gateway" id="active-class-code">NONE</strong>
-  </div>
-</section>
-<section class="stats-row" style="grid-template-columns: 1fr;">
-  <div class="stat-card">
-    <span>Create a Teacher Account</span>
-    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-      <input type="text" id="newTeacherName" placeholder="Teacher's Full Name" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border); flex: 1;" />
-      <input type="email" id="newTeacherEmail" placeholder="Teacher's Email" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border); flex: 1;" />
-      <input type="password" id="newTeacherPassword" placeholder="Temporary Password" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border); flex: 1;" />
-      <button type="button" class="btn btn-primary" id="addTeacherBtn">Add Teacher</button>
-    </div>
-  </div>
-</section>
+
+    <!-- Class Creation & Invite Codes -->
+    <!-- Class Creation & Filtering -->
+    <section class="stats-row" style="grid-template-columns: 1fr 1fr 1fr;">
+      <div class="stat-card">
+        <span>Create New Class</span>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <input type="text" id="newClassName" placeholder="e.g., SS1A" class="input-upper" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border); width: 100%;" />
+          <button type="button" class="btn btn-primary" id="createClassBtn">Create</button>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <span>Filter Students by Class</span>
+        <select id="classFilter" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border); width: 100%; margin-top: 10px; background: var(--bg-cream); color: var(--text-main);">
+          <option value="all">All Classes</option>
+        </select>
+      </div>
+
+      <div class="stat-card">
+        <span>Teacher Onboarding</span>
+        <button type="button" class="btn btn-primary" id="generateInviteBtn" style="margin-top: 5px; width: 100%;">Generate Invite Code</button>
+        <strong class="stat-gateway" id="active-invite-code" style="font-size: 1rem; margin-top: 5px;">NONE</strong>
+      </div>
+    </section>
+
+    <!-- Pending Teacher Approvals (Hidden by default) -->
+    <section class="stats-row" id="pending-teachers-section" style="grid-template-columns: 1fr; display: none;">
+      <div class="stat-card" style="border: 2px solid var(--accent-amber);">
+        <span style="color: var(--accent-amber); font-weight: bold;">⚠ Pending Teacher Approvals</span>
+        <div id="pending-teachers-list" style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
+          <!-- JS will populate this -->
+        </div>
+      </div>
+    </section>
+
     <section class="admin-header">
       <div>
         <h1>Weekly Attendance <span class="serif-italic">Register.</span></h1>
@@ -85,29 +97,31 @@
     </section>
   </div>
 
+  <!-- SMS Modal -->
   <div class="modal-backdrop" id="smsModal">
     <div class="modal-box modal-box-sm">
       <div class="title-accent" id="smsModalTitle">📲 2G SMS Alert Queued &amp; Sent</div>
-      <p class="sms-recipient" id="smsRecipientLabel">
-        Recipient: 08031234567
-      </p>
+      <p class="sms-recipient" id="smsRecipientLabel">Recipient: 08031234567</p>
       <div class="sms-bubble" id="smsPreviewText"></div>
-      <p class="hint" id="smsDemoNote" hidden>Demo mode: this message is simulated. Connect an SMS provider (Termii / Africa's Talking) to send for real.</p>
+      <p class="hint" id="smsDemoNote" hidden>Demo mode: this message is simulated.</p>
       <button type="button" class="btn btn-primary btn-block" id="closeSmsBtn">Done</button>
     </div>
   </div>
+
+  <!-- Remove Student Modal -->
   <div class="modal-backdrop" id="removeModal">
-  <div class="modal-box modal-box-sm">
-    <div class="title-accent text-danger">⚠ Remove Student</div>
-    <p id="removeModalText">Are you sure you want to remove this student?</p>
-    <div style="display: flex; gap: 10px; margin-top: 20px;">
-      <button type="button" class="btn btn-outline" id="cancelRemoveBtn">Cancel</button>
-      <button type="button" class="btn btn-sms" id="confirmRemoveBtn">Yes, Remove</button>
+    <div class="modal-box modal-box-sm">
+      <div class="title-accent text-danger">⚠ Remove Student</div>
+      <p id="removeModalText">Are you sure you want to remove this student?</p>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button type="button" class="btn btn-outline" id="cancelRemoveBtn">Cancel</button>
+        <button type="button" class="btn btn-sms" id="confirmRemoveBtn">Yes, Remove</button>
+      </div>
     </div>
   </div>
-</div>  
+
   <script src="../js/db.js"></script>
-  <script src="../js/supabase.js"></script> <!-- Add this line! -->
+  <script src="../js/supabase.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/sms.js"></script>
   <script src="../js/admin.js"></script>

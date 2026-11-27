@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v16';
+const CACHE_VERSION = 'v20'; // <--- Bumped to v20
 const CACHE = 'scholasync-' + CACHE_VERSION;
 
 const CORE = [
@@ -13,12 +13,14 @@ const CORE = [
   'js/app.js',
   'js/signup.js',
   'js/login.js',
+  'js/teacher-signup.js',    // <--- Added
   'js/student.js',
   'js/sms.js',
   'js/admin.js',
   'js/school-portal.js',
   'pages/signup.html',
   'pages/login.html',
+  'pages/teacher-signup.html', // <--- Added
   'pages/school-portal.html',
   'pages/student-dashboard.html',
   'pages/admin.html'
